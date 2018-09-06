@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\User">
+      <UniqueIdentifier>{d39dfa31-94ca-463e-8acf-5d5b4d83a3c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Net">
+      <UniqueIdentifier>{83b3849f-585e-41a1-a04a-52fed4c60fa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Data">
+      <UniqueIdentifier>{02f877d4-9ad5-404d-95cf-4bea36d65651}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Net">
+      <UniqueIdentifier>{6c8a0338-3e42-4bfb-ba58-e89df2574b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Data">
+      <UniqueIdentifier>{f50deb4a-ab39-4708-b64a-1174e77d1152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\User">
+      <UniqueIdentifier>{27fff9ab-e2e6-4fb5-a646-6c838a3d28c4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DB.cpp">
+      <Filter>源文件\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="People.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatPool.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+    <ClCompile Include="PoolMsg.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+    <ClCompile Include="Tower.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DB.h">
+      <Filter>头文件\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Msg.h">
+      <Filter>头文件\User</Filter>
+    </ClInclude>
+    <ClInclude Include="People.h">
+      <Filter>头文件\User</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>头文件\User</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatPool.h">
+      <Filter>头文件\User</Filter>
+    </ClInclude>
+    <ClInclude Include="Tower.h">
+      <Filter>头文件\User</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolMsg.h">
+      <Filter>头文件\User</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
