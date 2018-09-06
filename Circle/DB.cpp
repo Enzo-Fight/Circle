@@ -7,8 +7,8 @@ DB & DB::getDB() {
 	return *sigleton;
 }
 
-unsigned int DB::getNewId() {
-	return getDB().lastId++;
+unsigned int DB::getNewClientId() {
+	return getDB().lastClientId++;
 }
 
 DB::DB() {
@@ -18,4 +18,4 @@ DB::~DB() {
 }
 
 DB* DB::sigleton = nullptr;
-unsigned int DB::lastId = 1;
+unsigned int DB::lastClientId = 0;

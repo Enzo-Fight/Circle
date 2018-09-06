@@ -5,7 +5,7 @@ class DB {
 public:
 	static DB& getDB();
 
-	static unsigned int getNewId();
+	static unsigned int getNewClientId();
 
 private:
 	DB();
@@ -13,5 +13,5 @@ private:
 
 private:
 	static DB* sigleton;
-	static unsigned int lastId;
+	static unsigned int lastClientId;
 };
