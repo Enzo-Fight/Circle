@@ -20,22 +20,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChatPool.cpp" />
+    <ClCompile Include="ChatPoolAttr.cpp" />
     <ClCompile Include="DB.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="People.cpp" />
-    <ClCompile Include="Client.cpp" />
     <ClCompile Include="PoolMsg.cpp" />
+    <ClCompile Include="RLabel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChatClient.h" />
     <ClInclude Include="ChatPool.h" />
+    <ClInclude Include="ChatPoolAttr.h" />
     <ClInclude Include="DB.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Msg.h" />
     <ClInclude Include="People.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="PoolMsg.h" />
+    <ClInclude Include="RLabel.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

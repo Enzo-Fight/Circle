@@ -1,86 +1,81 @@
 #pragma once
 #include"People.h"
-#include"File.h"
 #include<queue>
 #include<map>
 #include<list>
 #include<set>
-#include"ChatPool.h"
 
 using std::queue;
 using std::map;
 using std::list;
 using std::vector;
 using std::set;
-using std::to_string;
 
 #define MAX_LABEL_NAME_LENGTH 12
+
+class ChatPool;
+class ChatPoolAttr;
+class RLabel;
 
 class Client : public People{
 
 public:
-	Client(string name, string password,unsigned long long phoneNum);
-	~Client();
+	Client(string name, string password, unsigned long long
+		phoneNum) :People(name, password), phoneNum(phoneNum) {
+	}
+	~Client() {}
 
 /* 私聊 */
 public:
-	bool chat(Client& other,Msg& msg);
-	
-	//添加好友
-	void addFriend(Client& fri);
+	virtual bool chat(Client* other, Msg& msg) = 0;
+	virtual bool _dealMsg(const unsigned int id, Msg* msg, bool isRecv) = 0;		//处理私聊消息
 
 	//请求添加好友
-	void reqAddFri(Client& fri);
+	virtual void reqAddFri(Client* fri) = 0;
+	virtual void _addFriend(Client* fri) = 0;
 
 	//回调，通知添加好友是否成功
-	void noticeAddFri(Client& fri, bool isSuccess);
+	virtual void noticeAddFri(Client* fri, bool isSuccess) = 0;
 
 	//删除好友
-	bool delFriend(unsigned int friId);
+	virtual bool delFriend(unsigned int friId) = 0;
 
-	//测试——打印所有朋友的消息队列大小
-	void print();
 
-private:
+protected:
 	unsigned long long phoneNum;									//手机号码
 	map<unsigned int,queue<const Msg*,list<const Msg*>>*>frisMsgQ;	//朋友及聊天信息
 	static unsigned int maxSizeOfMsgQ;								//私聊聊天信息最大容量
 
-	bool _dealMsg(const unsigned int id, Msg* msg,bool isRecv);		//处理私聊消息
-
 /* 金字塔通信 */
 public:
 	//创建聊天池
-	ChatPool& createChatPool(const string& name);
+	virtual ChatPool* createChatPool(const string& name) = 0;
+
+	//邀请加入聊天池
+	virtual void inviteJoinPool(Client* mFriend, ChatPool* chatPool,RLabel* label) = 0;
+
+	//退出聊天池
+	virtual void leavePool(ChatPool* chatPool) = 0;
+
+	virtual void addFather(Client * father, ChatPool* chatPool) = 0;
+
+	virtual void addChild(Client * child,ChatPool* chatPool) = 0;
 
 	//创建等级标签
-	RLabel* createLabel(ChatPool* chatPool, const string& labelName);
+	virtual RLabel* createLabel(ChatPool * chatPool, const string & labelName, const int labelGrade) = 0;
 
 	//设置聊天池中的等级标签
-	bool setRatingLabel(ChatPool* pool, vector<Client*>*clientG, RLabel* label);
-
-	//添加一个父节点
-	bool addFather(Client* father, ChatPool* chatPool);
-
-	//添加一个子节点
-	bool addChild(Client* child, ChatPool* chatPool);
+	virtual Client* setRatingLabel(ChatPool* chatPool, RLabel* label, set<unsigned int>*clientG) = 0;
 
 	//在聊天池中发一条消息
-	bool sendPoolMsg(ChatPool* chatPool, Msg* msg);
+	virtual bool sendPoolMsg(ChatPool* chatPool, Msg* msg) = 0;
 
 	//获取聊天池消息
-	vector<Msg*>* getPoolMsg(ChatPool* chatPool);
+	virtual vector<Msg*>* getPoolMsg(ChatPool* chatPool) = 0;
 
-private:
+	//加入聊天池
+	virtual void _joinPool(Client* somebody, ChatPool* chatPool, RLabel* label) = 0;
+
 	map<ChatPool*, ChatPoolAttr*> chatPools;	//所在的所有聊天池
-	vector<ChatPool*>mChatPools;				//所掌管的聊天池(合成金字塔时需考虑聊天池拥有者的问题)
-	vector<Client*>fathers;						//所有的父节点
-	vector<Client*>children;					//所有的子节点
-
-	//相互添加节点
-	bool _addFather(Client* father, ChatPool* chatPool);
-	bool _addChild(Client* child, ChatPool* chatPool);
-
-	//判断两个节点是否可以构成父子关系（根据等级标签）
-	bool labelIsLegal(Client* child, Client* father, ChatPool* chatPool);
+	set<ChatPool*>mChatPools;				//所掌管的聊天池(合成金字塔时需考虑聊天池拥有者的问题)
 };

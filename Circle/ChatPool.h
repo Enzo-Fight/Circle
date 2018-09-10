@@ -2,52 +2,50 @@
 #include<string>
 #include<queue>
 #include<vector>
+#include<map>
 #include"File.h"
+#include"Client.h"
+#include"RLabel.h"
 using std::string;
 using std::queue;
 using std::vector;
+using std::map;
 
 class Msg;
-class Client;
-
-//rating label 等级标签
-class RLabel {
-public:
-	int getGrade() { return grade; }
-	friend class ChatPool;
-private:
-	RLabel(const string& labelName,int labelGrade) : name(labelName), grade(labelGrade){}
-	~RLabel() {}
-
-private:
-	string name;				//标签名
-	int grade;					//等级
-	vector<unsigned int>*group;	//标签包含哪些人
-};
 
 //聊天池
 class ChatPool {
-public:
-	ChatPool(const string& poolName);
+	friend class Client;
+	friend class ChatClient;
+private:
+	ChatPool(const string & poolName, unsigned int sponsorId,
+		const string& sponsorName);
 	~ChatPool();
 
-	RLabel* createLabel(unsigned int clientId, int myGrade, const string& labelName,
-		int labelGrade, vector<Client&>&labelGroup);
+	const unsigned int getId();
+	const string& getName();
 
-	string name;
-	queue<Msg*>msgs;
+	void addClient(unsigned int clientId, const string& clientName, 
+		RLabel* label);
+	void delClient(unsigned int clientId, RLabel* label);
+	void noticeJoin(unsigned int sponsorId, const string &
+		sponsorName, unsigned int invitedManId, 
+		const string & invitedManName,RLabel* label);
+	
+	RLabel* createLabel(const int myGrade, const string& labelName,
+		int labelGrade, set<unsigned int>*labelGroup);
+	RLabel* createLabel(const int myGrade, const string& labelName,
+		int labelGrade);
+	bool setRatingLabel(const int myGrade, RLabel* label, 
+		set<unsigned int>* labelGroup);
 
 private:
 	const unsigned int poolId;
-	vector<RLabel*>labels;
-};
+	string name;
+	map<unsigned int,string> mClients;
+	set<RLabel*>labels;
+	queue<Msg*>msgs;
 
-//不同用户在同一聊天池中的等级不一样，属性不能放在聊天池中
-class ChatPoolAttr {
-public:
-	ChatPoolAttr() {}
-	~ChatPoolAttr() {}
+	bool hasClients(set<unsigned int>* clients);
 
-	RLabel *label;				//所属等级标签
-	char time[8];				//缓存最近访问聊天池的时间
 };
