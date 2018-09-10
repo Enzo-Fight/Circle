@@ -17,9 +17,11 @@ public:
 	//添加一个子节点
 	void addChild(Client* child);
 
+	const string& getReqTime();
 private:
-	vector<Client*>fathers;						//所有的父节点
-	vector<Client*>children;					//所有的子节点
+	void setCacheTime(unsigned long time);
+	vector<Client*>fathers;			//所有的父节点
+	vector<Client*>children;		//所有的子节点
 	RLabel *mLabel;					//所属等级标签
-	string cacheTime;				//缓存最近访问聊天池的时间
+	unsigned long cacheTime;				//缓存最近访问聊天池的时间
 };

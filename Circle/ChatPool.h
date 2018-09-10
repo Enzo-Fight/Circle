@@ -6,12 +6,13 @@
 #include"File.h"
 #include"Client.h"
 #include"RLabel.h"
+#include"PoolMsg.h"
+#include"ChatPoolAttr.h"
+#include <windows.h>
 using std::string;
 using std::queue;
 using std::vector;
 using std::map;
-
-class Msg;
 
 //聊天池
 class ChatPool {
@@ -39,13 +40,21 @@ private:
 	bool setRatingLabel(const int myGrade, RLabel* label, 
 		set<unsigned int>* labelGroup);
 
+	void addMsg(PoolMsg * msg);
+	vector<PoolMsg*>* getMsg(Client* client);
 private:
+	static unsigned int maxSizeOfMsgQ;
+
 	const unsigned int poolId;
 	string name;
 	map<unsigned int,string> mClients;
 	set<RLabel*>labels;
-	queue<Msg*>msgs;
-
+	map<unsigned long long,PoolMsg*>msgs;		//消息按时间排序un
+	SYSTEMTIME sysTime;
+	const static unsigned int tSec = 1000;
+	const static unsigned int tMin = 60 * tSec;
+	const static unsigned int tHour = 60 * tMin;
+	const static unsigned int tDay = 24 * tHour;
+	const static unsigned int tMon = 31 * tDay;
 	bool hasClients(set<unsigned int>* clients);
-
 };

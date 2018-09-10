@@ -19,5 +19,5 @@ public:
 private:
 	string name;				//标签名
 	int grade;					//等级
-	set<unsigned int>*clients;   //标签包含哪些人
+	set<unsigned int>*clients;  //标签包含哪些人
 };

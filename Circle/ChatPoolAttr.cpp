@@ -14,3 +14,11 @@ void ChatPoolAttr::addFather(Client * father) {
 void ChatPoolAttr::addChild(Client * child) {
 	children.push_back(child);
 }
+
+const unsigned long ChatPoolAttr::getReqTime() {
+	return cacheTime;
+}
+
+void ChatPoolAttr::setCacheTime(const string& time) {
+	cacheTime = time;
+}

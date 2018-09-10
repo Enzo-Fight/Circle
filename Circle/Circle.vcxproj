@@ -19,18 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChatClient.cpp" />
     <ClCompile Include="ChatPool.cpp" />
     <ClCompile Include="ChatPoolAttr.cpp" />
     <ClCompile Include="DB.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="File.cpp" />
-    <ClCompile Include="Msg.cpp" />
     <ClCompile Include="People.cpp" />
-    <ClCompile Include="PoolMsg.cpp" />
     <ClCompile Include="RLabel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChatClient.h" />
     <ClInclude Include="ChatPool.h" />
     <ClInclude Include="ChatPoolAttr.h" />
     <ClInclude Include="DB.h" />

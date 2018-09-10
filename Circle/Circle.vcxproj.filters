@@ -42,12 +42,6 @@
     <ClCompile Include="People.cpp">
       <Filter>源文件\User</Filter>
     </ClCompile>
-    <ClCompile Include="Msg.cpp">
-      <Filter>源文件\User</Filter>
-    </ClCompile>
-    <ClCompile Include="PoolMsg.cpp">
-      <Filter>源文件\User</Filter>
-    </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>源文件\Data</Filter>
     </ClCompile>
@@ -58,6 +52,9 @@
       <Filter>源文件\User</Filter>
     </ClCompile>
     <ClCompile Include="ChatPoolAttr.cpp">
+      <Filter>源文件\User</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatClient.cpp">
       <Filter>源文件\User</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,9 +84,6 @@
       <Filter>头文件\User</Filter>
     </ClInclude>
     <ClInclude Include="ChatPoolAttr.h">
-      <Filter>头文件\User</Filter>
-    </ClInclude>
-    <ClInclude Include="ChatClient.h">
       <Filter>头文件\User</Filter>
     </ClInclude>
   </ItemGroup>

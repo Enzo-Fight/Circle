@@ -15,6 +15,12 @@ ChatPool::~ChatPool() {
 	for (auto it = labels.begin(); it != labels.end(); ++it) {
 		delete *it;
 	}labels.clear();
+	//清除所有的聊天记录
+	while (msgs.size()) {
+		auto it = --msgs.end();
+		delete it->second;
+		msgs.erase(it);
+	}
 }
 
 const unsigned int ChatPool::getId() {
@@ -87,6 +93,33 @@ bool ChatPool::setRatingLabel(const int myGrade,RLabel * label, set<unsigned int
 	}
 }
 
+void ChatPool::addMsg(PoolMsg * msg) {
+	GetLocalTime(&sysTime);
+	unsigned long long time = sysTime.wMonth*tMon +
+			sysTime.wDay*tDay + sysTime.wHour*tHour +
+			sysTime.wMinute*tMin + sysTime.wSecond*tSec +
+			sysTime.wMilliseconds;
+	msgs[time] = msg;
+	if (msgs.size() > maxSizeOfMsgQ) {
+		auto it = --msgs.end();
+		delete it->second;
+		msgs.erase(it);
+	}
+}
+
+vector<PoolMsg*>* ChatPool::getMsg(Client * client) {
+	map<ChatPool*, ChatPoolAttr*>::iterator it = client->chatPools.find(this);
+	if (it != client->chatPools.end()) {
+		auto it1 = msgs.find(it->second->getReqTime());
+		
+		it->second->getGrade();
+		//it->second->getGrade();
+		//it->second->getReqTime();
+		//chatPool->getMsg(it->second)
+	}
+	return nullptr;
+}
+
 bool ChatPool::hasClients(set<unsigned int>* clients) {
 	bool isTrue = true;
 	for (auto it : *clients) {
@@ -97,6 +130,6 @@ bool ChatPool::hasClients(set<unsigned int>* clients) {
 		}
 	}
 	return isTrue;
-
 }
 
+unsigned int ChatPool::maxSizeOfMsgQ = 100;

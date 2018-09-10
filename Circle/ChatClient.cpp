@@ -43,11 +43,9 @@ public:
 	}
 
 	void reqAddFri(Client* fri) {
-		if (0 == frisMsgQ.count(fri->getId())) {
+		if (0 == frisMsgQ.count(fri->getId()) && getId() != fri->getId()) {
 			fri->_addFriend(this);//耗时动作，不要求立即返回对方同意与否的结果
-		} else {
-			cout << fri->getId() << ",名称：" << fri->getName() << "已经是你的好友" << endl;
-		}
+		} 
 	}
 
 	void noticeAddFri(Client* fri, bool isSuccess) {
@@ -140,7 +138,7 @@ public:
 	}
 
 	void leavePool(ChatPool * chatPool) {
-		chatPool->delClient(getId(),chatPools[chatPool]->mLabel);
+		chatPool->delClient(getId(), chatPools[chatPool]->mLabel);
 		chatPools.erase(chatPool);
 		mChatPools.erase(chatPool);
 	}
@@ -208,14 +206,14 @@ public:
 
 	//发到聊天池后应通知用户1所在等级的所有用户前来获取消息==》
 	//如果在线，则通过网络发送消息给用户，收到确认信息后更新用户中的聊天池时间
-	bool sendPoolMsg(ChatPool * chatPool, Msg* msg) {
-
-		return false;
+	void sendPoolMsg(ChatPool * chatPool, Msg* msg,RLabel * label) {
+		PoolMsg * poolMsg = new PoolMsg(getId(), label, msg->getContent());
+		chatPool->addMsg(poolMsg);
 	}
 
 	//从指定的聊天池中获取从fromWhen至今的信息，成功则更新用户中的聊天池时间
-	vector<Msg*>* getPoolMsg(ChatPool * chatPool) {
-		return nullptr;
+	vector<PoolMsg*>* getPoolMsg(ChatPool * chatPool) {
+		return chatPool->getMsg(this);
 	}
 
 private:
@@ -230,4 +228,3 @@ private:
 	}
 
 };
-unsigned int Client::maxSizeOfMsgQ = 100;

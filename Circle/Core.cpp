@@ -4,9 +4,10 @@
 #include<deque>
 #include<list>
 #include"PoolMsg.h"
-#include"ChatClient.h"
+#include"ChatClient.cpp"
 #include"Msg.h"
 #include<string>
+#include<time.h>
 //#pragma comment(lib,"../")
 using namespace std;
 
@@ -61,6 +62,7 @@ void test1_singleChat() {
 	return;
 }
 
+void printPoolMsg(ChatClient* client, ChatPool* chatPool);
 void test2_towerChat() {
 	//模拟金字塔通信（未包含金字塔合成功能）
 	//(聊天池中应该记录每条消息的时间)
@@ -71,26 +73,10 @@ void test2_towerChat() {
 	for (int i = 0; i < clientSize; i++) {
 		clients[i] = new ChatClient(to_string(i), "s", -i);
 	}
-	vector<Msg*>msgVec;
-	size_t i, msgSize = 11;
-	for (i = 0; i < msgSize; i++) {
-		msgVec.push_back(new Msg("msg" + i));
-	}
 
 	//建立关系（定死金字塔，暂不考虑塔合成）
 	ChatPool* chatPool = clients[9]->createChatPool("testPool");
-	//(1)设定关系
-	clients[9]->addChild(clients[7], chatPool);
-	clients[9]->addChild(clients[8], chatPool);
-	clients[7]->addChild(clients[6], chatPool);
-	clients[8]->addChild(clients[10], chatPool);
-	clients[6]->addChild(clients[4], chatPool);
-	clients[6]->addChild(clients[5], chatPool);
-	clients[11]->addChild(clients[4], chatPool);
-	clients[4]->addChild(clients[1], chatPool);
-	clients[4]->addChild(clients[2], chatPool);
-	clients[5]->addChild(clients[3], chatPool);
-	//(2)设定标签
+	//(1)设定标签
 	RLabel *label_2, *label_3, *label_4, *label_5;
 	//set<unsigned int>label_1set, label_2set, label_3set, label_4set, label_5set;
 	//label_1set.insert(clients[1]->getId());
@@ -103,14 +89,17 @@ void test2_towerChat() {
 	//label_3set.insert(clients[6]->getId());
 	//label_4set.insert(clients[7]->getId());
 	//label_4set.insert(clients[8]->getId());
-	label_2 = clients[9]->createLabel(chatPool, to_string(i), -2);
-	label_3 = clients[9]->createLabel(chatPool, to_string(i), -3);
-	label_4 = clients[9]->createLabel(chatPool, to_string(i), -4);
-	label_5 = clients[9]->createLabel(chatPool, to_string(i), -5);
+	label_2 = clients[9]->createLabel(chatPool, "label_2", -2);
+	label_3 = clients[9]->createLabel(chatPool, "label_3", -3);
+	label_4 = clients[9]->createLabel(chatPool, "label_4", -4);
+	label_5 = clients[9]->createLabel(chatPool, "label_5", -5);
 	if (label_2 == nullptr || label_3 == nullptr
 		|| label_4 == nullptr || label_5 == nullptr ) {
 		cout << "core中创建标签失败" << endl;
 		return;
+	}
+	for (size_t i = 1; i < 12; i++) {
+		clients[9]->reqAddFri(clients[i]);
 	}
 	clients[9]->inviteJoinPool(clients[1], chatPool, label_5);
 	clients[9]->inviteJoinPool(clients[2], chatPool, label_5);
@@ -122,22 +111,39 @@ void test2_towerChat() {
 	clients[9]->inviteJoinPool(clients[6], chatPool, label_3);
 	clients[9]->inviteJoinPool(clients[7], chatPool, label_2);
 	clients[9]->inviteJoinPool(clients[8], chatPool, label_2);
+	//(2)设定关系
+	clients[9]->addChild(clients[7], chatPool);
+	clients[9]->addChild(clients[8], chatPool);
+	clients[7]->addChild(clients[6], chatPool);
+	clients[8]->addChild(clients[10], chatPool);
+	clients[6]->addChild(clients[4], chatPool);
+	clients[6]->addChild(clients[5], chatPool);
+	clients[11]->addChild(clients[4], chatPool);
+	clients[4]->addChild(clients[1], chatPool);
+	clients[4]->addChild(clients[2], chatPool);
+	clients[5]->addChild(clients[3], chatPool);
 	//clients[9]->setRatingLabel(chatPool, label_5, &label_1set)
 	//	->setRatingLabel(chatPool, label_4, &label_2set)
 	//	->setRatingLabel(chatPool, label_3, &label_3set)
 	//	->setRatingLabel(chatPool, label_2, &label_4set);
 
 	//事件：用户6发送消息给用户1所在等级
-	clients[6]->sendPoolMsg(chatPool, msgVec.at(i++%msgSize));
+	Msg msg("Hello 我是用户6");
+	clients[6]->sendPoolMsg(chatPool, &msg,label_5);
 	//事件：用户6，1，10，5，7查询聊天池信息
-	clients[6]->getPoolMsg(chatPool);
-	clients[1]->getPoolMsg(chatPool);
-	clients[10]->getPoolMsg(chatPool);
-	clients[5]->getPoolMsg(chatPool);
-	clients[7]->getPoolMsg(chatPool);
-	for (size_t i = 0; i < msgSize; i++) {
-		delete msgVec.back();
-		msgVec.pop_back();
+	printPoolMsg(clients[6], chatPool);
+	printPoolMsg(clients[1], chatPool);
+	printPoolMsg(clients[10], chatPool);
+	printPoolMsg(clients[5], chatPool);
+	printPoolMsg(clients[7], chatPool);
+}
+void printPoolMsg(ChatClient* client, ChatPool* chatPool) {
+	vector<PoolMsg*>* msgs = client->getPoolMsg(chatPool);
+	if (msgs != nullptr) {
+		cout << "用户" << client->getName() << "获取到的聊天池信息" << endl;
+		for (auto it : *msgs) {
+			cout << it << ",";
+		}cout << endl;
 	}
 }
 
