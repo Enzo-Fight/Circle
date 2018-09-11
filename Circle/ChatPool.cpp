@@ -4,10 +4,9 @@ using std::cout;
 using std::endl;
 using std::cerr;
 
-ChatPool::ChatPool(const string & poolName,unsigned int sponsorId,
-	const string& sponsorName) : name(poolName),
+ChatPool::ChatPool(const string & poolName,Client* sponsor) : name(poolName),
 	poolId(File::getNewChatPoolId()) {
-	mClients[sponsorId] = sponsorName;
+	mClients.insert(sponsor);
 }
 
 ChatPool::~ChatPool() {
@@ -31,27 +30,24 @@ const string & ChatPool::getName() {
 	return name;
 }
 
-void ChatPool::addClient(unsigned int clientId, const string&
-	clientName, RLabel* label) {
-	mClients[clientId] = clientName;
-	label->addClient(clientId);
+void ChatPool::addClient(Client* client, RLabel* label) {
+	mClients.insert(client);
+	label->addClient(client);
 }
 
-void ChatPool::delClient(unsigned int clientId, RLabel* label) {
-	mClients.erase(clientId);
-	label->delClient(clientId);
+void ChatPool::delClient(Client* client, RLabel* label) {
+	mClients.erase(client);
+	label->delClient(client);
 }
 
-void ChatPool::noticeJoin(unsigned int sponsorId, const string & 
-	sponsorName,unsigned int invitedManId, const string &
-	invitedManName, RLabel* label) {
-	cout << getId() << "," << getName() << "聊天池中==>" << sponsorId << ",("
-		<< sponsorName << ")邀请了" << invitedManId << ",(" << invitedManName << ")进群" << endl;
-	addClient(invitedManId, invitedManName,label);
+void ChatPool::noticeJoin(Client* sponsor,Client* invitedMan, RLabel* label) {
+	cout << getId() << "," << getName() << "聊天池中==>" << sponsor->getId() << ",("
+		<< sponsor->getName() << ")邀请了" << invitedMan->getId() << ",(" << invitedMan->getName() << ")进群" << endl;
+	addClient(invitedMan,label);
 }
 
 RLabel* ChatPool::createLabel(const int myGrade,const string & labelName,
-	int labelGrade, set<unsigned int>* labelGroup) {
+	int labelGrade, set<Client*>* labelGroup) {
 	if (myGrade < labelGrade) {
 		cout << "ChatPool::createLabel中不允许创建高于自身等级的标签" << endl;
 		return nullptr;
@@ -77,7 +73,7 @@ RLabel * ChatPool::createLabel(const int myGrade, const string & labelName, int 
 	}
 }
 
-bool ChatPool::setRatingLabel(const int myGrade,RLabel * label, set<unsigned int>* labelGroup) {
+bool ChatPool::setRatingLabel(const int myGrade,RLabel * label, set<Client*>* labelGroup) {
 	if (myGrade < label->getGrade()) {
 		cout << "ChatPool::setRatingLabel中不允许设置比自身等级高的标签群体" << endl;
 		cout << "用户等级：" << myGrade << ",标签等级：" << label->getGrade() << endl;
@@ -95,7 +91,7 @@ bool ChatPool::setRatingLabel(const int myGrade,RLabel * label, set<unsigned int
 
 void ChatPool::addMsg(PoolMsg * msg) {
 	GetLocalTime(&sysTime);
-	unsigned long long time = sysTime.wMonth*tMon +
+	unsigned long time = sysTime.wMonth*tMon +
 			sysTime.wDay*tDay + sysTime.wHour*tHour +
 			sysTime.wMinute*tMin + sysTime.wSecond*tSec +
 			sysTime.wMilliseconds;
@@ -109,18 +105,25 @@ void ChatPool::addMsg(PoolMsg * msg) {
 
 vector<PoolMsg*>* ChatPool::getMsg(Client * client) {
 	map<ChatPool*, ChatPoolAttr*>::iterator it = client->chatPools.find(this);
+	vector<PoolMsg*>* vec = new vector<PoolMsg*>;
 	if (it != client->chatPools.end()) {
-		auto it1 = msgs.find(it->second->getReqTime());
-		
-		it->second->getGrade();
-		//it->second->getGrade();
-		//it->second->getReqTime();
-		//chatPool->getMsg(it->second)
+		int grade = it->second->getGrade();		//用户等级
+		map<unsigned long, PoolMsg*>::iterator it1 
+			= msgs.upper_bound(it->second->getReqTime());
+		while (it1 != msgs.end()) {
+			if (it1->second->getRecvGrade() == grade) {
+				Client* owner = it1->second->getOwner();
+				if(client->askParent(this, owner->getId(),
+					owner->chatPools[this]->getGrade()))
+					vec->push_back(it1->second);
+			}
+			++it1;
+		}
 	}
-	return nullptr;
+	return vec;
 }
 
-bool ChatPool::hasClients(set<unsigned int>* clients) {
+bool ChatPool::hasClients(set<Client*>* clients) {
 	bool isTrue = true;
 	for (auto it : *clients) {
 		if (0 == mClients.count(it)) {

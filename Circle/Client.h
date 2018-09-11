@@ -1,6 +1,5 @@
 #pragma once
 #include"People.h"
-#include"PoolMsg.h"
 #include<queue>
 #include<map>
 #include<list>
@@ -15,9 +14,9 @@ using std::set;
 class ChatPool;
 class ChatPoolAttr;
 class RLabel;
+class PoolMsg;
 
 class Client : public People{
-
 public:
 	Client(string name, string password, unsigned long long
 		phoneNum) :People(name, password), phoneNum(phoneNum) {}
@@ -41,7 +40,7 @@ public:
 protected:
 	unsigned long long phoneNum;									//手机号码
 	map<unsigned int,queue<const Msg*,list<const Msg*>>*>frisMsgQ;	//朋友及聊天信息
-	static const unsigned int maxSizeOfMsgQ = 0;					//私聊聊天信息最大容量
+	static const unsigned int maxSizeOfMsgQ = 100;					//私聊聊天信息最大容量
 
 /* 金字塔通信 */
 public:
@@ -62,7 +61,7 @@ public:
 	virtual RLabel* createLabel(ChatPool * chatPool, const string & labelName, const int labelGrade) = 0;
 
 	//设置聊天池中的等级标签
-	virtual Client* setRatingLabel(ChatPool* chatPool, RLabel* label, set<unsigned int>*clientG) = 0;
+	virtual Client* setRatingLabel(ChatPool* chatPool, RLabel* label, set<Client*>*clientG) = 0;
 
 	//在聊天池中发一条消息
 	virtual void sendPoolMsg(ChatPool* chatPool, Msg* msg, RLabel * label) = 0;
@@ -70,6 +69,9 @@ public:
 	//获取聊天池消息
 	virtual vector<PoolMsg*>* getPoolMsg(ChatPool* chatPool) = 0;
 
+	//询问父节点消息发送者id是否是自己的祖辈，递归调用
+	virtual bool askParent(ChatPool*chatPool,const unsigned int id,const int grade) = 0;
+	
 	//加入聊天池
 	virtual void _joinPool(Client* somebody, ChatPool* chatPool, RLabel* label) = 0;
 

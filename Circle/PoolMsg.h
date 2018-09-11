@@ -1,20 +1,21 @@
 #pragma once
 #include"Msg.h"
 #include"RLabel.h"
+#include"Client.h"
 //聊天池中的信息
 class PoolMsg :public Msg{
 public:
-	PoolMsg(unsigned int sendId,RLabel * recvLabel,string content)
-		:mOwnerId(sendId),mRecvLabel(recvLabel),Msg(content){}
+	PoolMsg(Client* owner,RLabel * recvLabel,string content)
+		:mOwner(owner),mRecvLabel(recvLabel),Msg(content){}
 
 	~PoolMsg() {}
-	const unsigned int getOwnerId() {
-		return mOwnerId;
+	Client* getOwner() {
+		return mOwner;
 	}
 	const int getRecvGrade() {
 		return mRecvLabel->getGrade();
 	}
 private:
-	unsigned int mOwnerId;
+	Client * mOwner;
 	RLabel * mRecvLabel;
 };

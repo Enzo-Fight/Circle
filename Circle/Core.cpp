@@ -141,8 +141,9 @@ void printPoolMsg(ChatClient* client, ChatPool* chatPool) {
 	vector<PoolMsg*>* msgs = client->getPoolMsg(chatPool);
 	if (msgs != nullptr) {
 		cout << "用户" << client->getName() << "获取到的聊天池信息" << endl;
+		cout << msgs->size() << endl;
 		for (auto it : *msgs) {
-			cout << it << ",";
+			cout << it->getContent() << ",";
 		}cout << endl;
 	}
 }
@@ -165,6 +166,7 @@ int main(int argc, char* argv[]) {
 	std::ios::sync_with_stdio(false);
 	//test1_singleChat();
 	test2_towerChat();
+	//cout << sizeof(unsigned long) << endl;
 	//cout << UINT32_MAX << endl;
 	//cout << sizeof(unsigned int) << endl;
 	system("pause");

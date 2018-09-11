@@ -2,12 +2,12 @@
 
 RLabel::RLabel(const string & labelName, int labelGrade)
 	: name(labelName), grade(labelGrade) {
-	clients = new set<unsigned int>;
+	clients = new set<Client*>;
 }
 
 RLabel::RLabel(const string & labelName, int labelGrade,
-	set<unsigned int>* clientGroup) : RLabel(labelName, labelGrade) {
-	clients = new set<unsigned int>;
+	set<Client*>* clientGroup) : RLabel(labelName, labelGrade) {
+	clients = new set<Client*>;
 	clients = clientGroup;
 }
 
@@ -15,12 +15,12 @@ RLabel::~RLabel() {
 	delete clients;
 }
 
-void RLabel::addClient(unsigned int id) {
-	clients->insert(id);
+void RLabel::addClient(Client* client) {
+	clients->insert(client);
 }
 
-void RLabel::delClient(unsigned int id) {
-	clients->erase(id);
+void RLabel::delClient(Client* client) {
+	clients->erase(client);
 }
 
 int RLabel::getGrade() {

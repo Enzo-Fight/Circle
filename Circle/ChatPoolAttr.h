@@ -1,4 +1,5 @@
 #pragma once
+#include <windows.h>
 #include"Client.h"
 #include"RLabel.h"
 //不同用户在同一聊天池中的等级不一样，属性不能放在聊天池中
@@ -17,11 +18,12 @@ public:
 	//添加一个子节点
 	void addChild(Client* child);
 
-	const string& getReqTime();
+	const unsigned long getReqTime();
 private:
-	void setCacheTime(unsigned long time);
+	void setCacheTime(const unsigned int time);
 	vector<Client*>fathers;			//所有的父节点
 	vector<Client*>children;		//所有的子节点
 	RLabel *mLabel;					//所属等级标签
+	SYSTEMTIME sysTime;
 	unsigned long cacheTime;				//缓存最近访问聊天池的时间
 };
