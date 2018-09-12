@@ -46,6 +46,7 @@ private:
 	void addMsg(PoolMsg * msg);
 	vector<PoolMsg*>* getMsg(Client* client);
 	bool hasClients(set<Client*>* clients);
+	
 private:
 	static unsigned int maxSizeOfMsgQ;
 	const unsigned int poolId;

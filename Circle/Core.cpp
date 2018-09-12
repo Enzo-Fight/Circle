@@ -62,7 +62,15 @@ void test1_singleChat() {
 	return;
 }
 
-void printPoolMsg(ChatClient* client, ChatPool* chatPool);
+void printPoolMsg(ChatClient* client, ChatPool* chatPool) {
+	vector<PoolMsg*>* msgs = client->getPoolMsg(chatPool);
+	if (msgs != nullptr) {
+		cout << "用户" << client->getName() << "获取到的聊天池信息" << endl;
+		for (auto it : *msgs) {
+			cout << it->getContent() << ",";
+		}cout << endl;
+	}
+}
 void test2_towerChat() {
 	//模拟金字塔通信（未包含金字塔合成功能）
 	//(聊天池中应该记录每条消息的时间)
@@ -128,44 +136,36 @@ void test2_towerChat() {
 	//	->setRatingLabel(chatPool, label_2, &label_4set);
 
 	//事件：用户6发送消息给用户1所在等级
-	Msg msg("Hello 我是用户6");
-	clients[6]->sendPoolMsg(chatPool, &msg,label_5);
+	Msg msg1("Hello 我是用户6");
+	clients[6]->sendPoolMsg(chatPool, &msg1,label_5);
+	Sleep(1);
+	Msg msg2("Hello 我是用户11");
+	clients[11]->sendPoolMsg(chatPool, &msg2, label_5);
 	//事件：用户6，1，10，5，7查询聊天池信息
-	printPoolMsg(clients[6], chatPool);
-	printPoolMsg(clients[1], chatPool);
-	printPoolMsg(clients[10], chatPool);
-	printPoolMsg(clients[5], chatPool);
-	printPoolMsg(clients[7], chatPool);
-}
-void printPoolMsg(ChatClient* client, ChatPool* chatPool) {
-	vector<PoolMsg*>* msgs = client->getPoolMsg(chatPool);
-	if (msgs != nullptr) {
-		cout << "用户" << client->getName() << "获取到的聊天池信息" << endl;
-		cout << msgs->size() << endl;
-		for (auto it : *msgs) {
-			cout << it->getContent() << ",";
-		}cout << endl;
+	for (size_t i = 1; i < 12; i++) {
+		printPoolMsg(clients[i], chatPool);
 	}
 }
 
-//enzo1 sdfa 15626056351
-//enzo2 sdfa 15626056352
-//enzo3 sdfa 15626056353
-//enzo4 sdfa 15626056354
-//enzo5 sdfa 15626056355
-//enzo6 sdfa 15626056356
-//enzo7 sdfa 15626056357
-//enzo8 sdfa 15626056358
-//enzo9 sdfa 15626056359
-void test3_towerConnect() {
+
+void test3_towerComposited() {
 	//模拟金字塔合成功能,确定合成后消息接受仍正确
+	//初始化用户
+	const short clientSize = 12;
+	ChatClient *clients[clientSize];
+	for (int i = 0; i < clientSize; i++) {
+		clients[i] = new ChatClient(to_string(i), "s", -i);
+	}
 
 }
+
+
 
 int main(int argc, char* argv[]) {
 	std::ios::sync_with_stdio(false);
 	//test1_singleChat();
-	test2_towerChat();
+	//test2_towerChat();
+	test3_towerComposited();
 	//cout << sizeof(unsigned long) << endl;
 	//cout << UINT32_MAX << endl;
 	//cout << sizeof(unsigned int) << endl;
